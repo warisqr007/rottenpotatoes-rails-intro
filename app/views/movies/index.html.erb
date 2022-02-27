@@ -3,13 +3,13 @@
 
 <%#  Part 1: Start here... %>
 
-<%= form_tag movies_path, :method => :get do%>
+<%= form_tag movies_path, :method => :get, :id => "ratings_form" do%>
   Include:
   <% @all_ratings.each do |rating|%>
     <%= rating%>
-    <%= check_box_tag "ratings[#{rating}]", 1, checked(rating) %>
+    <%= check_box_tag "ratings[#{rating}]", 1, checked(rating), :id => "ratings_#{rating}" %>
     <% end %>
-  <%= submit_tag 'Refresh', :class => 'btn btn-primary'%>
+  <%= submit_tag 'Refresh', :class => 'btn btn-primary', :id => "ratings_submit"%>
 <% end %>
 
 <table class="table table-striped col-md-12" id="movies">

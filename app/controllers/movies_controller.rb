@@ -8,16 +8,34 @@ class MoviesController < ApplicationController
 
   def index
     
+    @url = request.original_url
+    if ! (@url =~ /movies/)
+      session.clear
+    end
+    
+    if params[:ratings].nil? && params[:sort].nil? && (!session[:ratings].nil? || !session[:sort].nil?)
+      params[:ratings] = session[:ratings]
+      params[:sort] = session[:sort]
+    end
+    
     if params[:ratings].nil? && params[:sort].nil?
       @movies = Movie.all
+      session[:ratings] = nil
+      session[:sort] = nil
     elsif params[:ratings].nil?
       @movies = Movie.order(params[:sort]) 
+      session[:ratings] = nil
+      session[:sort] = params[:sort]
     elsif params[:sort].nil?
       @params_ratings = params[:ratings]
       @movies = Movie.where("rating IN (?)",@params_ratings.keys)
+      session[:sort] = nil
+      session[:ratings] = params[:ratings]
     else
       @params_ratings = params[:ratings]
       @movies = Movie.where("rating IN (?)",@params_ratings.keys).order(params[:sort])
+      session[:sort] = params[:sort]
+      session[:ratings] = params[:ratings]
     end
     
     @sort_column = params[:sort]
